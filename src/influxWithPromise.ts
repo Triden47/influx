@@ -2,8 +2,8 @@ import { InfluxTypes } from "./common";
 import { influx } from "./influx";
 import { replacePathParams, addQueryParams } from "./utils";
 
-export function influxWithPromise(obj: InfluxTypes, words: { input: string, replace: string }[]) {
-  const parsedObj = influx(obj, words);
+export function influxWithPromise(obj: InfluxTypes, replacements: { [target: string]: string }) {
+  const parsedObj = influx(obj, replacements);
 
   let { type, method, headers, body, queryParams, action, pathParams } = parsedObj
   let url = action
