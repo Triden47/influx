@@ -1,12 +1,10 @@
-import { replace } from "./replace";
-import { influx } from "./influx";
-import { influxWithPromise } from "./influxWithPromise";
+import { replace as parseText } from "./replace";
+import { influx as parseJSON } from "./influx";
 
-export { replace, influx, influxWithPromise };
+export { parseText, parseJSON };
 
 export default {
-    replace,
-    influx,
-    influxWithPromise
+    parseText,
+    parseJSON
 }
 
