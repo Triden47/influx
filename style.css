@@ -1,0 +1,19 @@
+.chat {
+    height: 400px;
+    overflow-y: auto;
+}
+.chat-content {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+}
+.chat-root {
+    padding: 20px;
+}
+.chat .message:last-child {
+    border-bottom: 1px solid #ccc;
+}
+.influx-logo {
+    width: 200px;
+    height: 150px;
+}

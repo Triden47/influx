@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Influx</title>
+    <link rel="icon" type="image/x-icon" href="/influx-high-resolution-logo-black-transparent.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Reddit Mono', monospace;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <img src="./influx-high-resolution-logo-black-transparent.png" alt="" class="influx-logo  mb-4" />
+        </div>
+        <p class="text-center">{{ REPLACE }} variables parse JSON & create promises</p>
+        <div class="col-lg-12 px-0">
+            <div class="row">
+                <div class="col-5 chat-root">
+                    <div class="row chat-content">
+                        <div class="row col-12 justify-content-between align-items-center mb-1">
+                            <div class="col-8">
+                                <h4 class="m-0">Input</h4>
+                            </div>
+                            <div class="col-4 row align-items-center">
+                                <select class="form-select form-select-sm col" aria-label="Small select example"
+                                    name="type" id="type">
+                                    <option value="text">Text</option>
+                                    <option value="json">JSON</option>
+                                    <!-- <option value="promise">JsonWithPromise</option> -->
+                                </select>
+                                <div class="col-1">
+                                    <button type="button" class="m-0 p-0 btn btn-link" onclick="showInfo()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24.5" height="24.5"
+                                            viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                            <path
+                                                d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336l24 0 0-64-24 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24l0 88 8 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="input-div">
+                            <div class="">
+                                <textarea class="container" rows="18" id="input"></textarea>
+                            </div>
+                            <div class="py-2 row">
+                                <button type="button" class="mx-2 btn btn-dark col-3"
+                                    onclick="outputData()">Parse</button>
+                                <button type="button" class="btn btn-dark col-3" id="callButton"
+                                    onclick="call()">Call</button>
+                            </div>
+                        </div>
+                        <div id="info-div" class="chat-content p-3">
+                            <div class="row justify-content-between">
+                                <div class="col">
+                                    <h5>Info</h5>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="m-0 p-0 btn btn-link" onclick="showInfo()">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="18" width="14.5"
+                                            viewBox="0 0 384 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                            <path
+                                                d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <p>1. In text format the whole string is parsed</p>
+                            <p class="p-0 m-0">2. In JSON format:</p>
+                            <p class="p-0 m-0">a. if type === "form",
+                            <p class="p-0 m-0">
+                                - parse: body is parsed
+                            </p>
+                            <p class="p-0 m-0">
+                                - call: form is created using body
+                            </p>
+                            <p>
+                                - use <strong>form.submit()</strong> to submit it
+                            </p>
+                            <p class="p-0 m-0">b. if type === "api",</p>
+                            <p class="p-0 m-0">
+                                - parse: body, queryParams, and pathParams is parsed
+                            </p>
+                            <p class="p-0 m-0">
+                                - call: fetch api promise is created(action, method is required)
+                            </p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2 chat-root">
+                    <div id="container"></div>
+                    <div class="row chat-content py-2">
+                        <div>
+                            <label for="replace">Replace</label>
+                            <input class="w-100" id="replace-0"></input>
+                        </div>
+                        <div>
+                            <label for="by">By</label>
+                            <input class="w-100" id="by-0"></input>
+                        </div>
+                    </div>
+                    <div class="pt-3 row justify-content-center">
+                        <button type="button" class="btn btn-dark" id="addRowBtn">+ Replace</button>
+                    </div>
+                </div>
+                <div class="col-5 chat-root">
+                    <div class="row chat-content">
+
+                        <div class="col-12">
+                            <h4>Output</h4>
+                        </div>
+                        <div class="">
+                            <textarea class="container" rows="20" id="output"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <div>
+                        <div id="toast-failed">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14"
+                                viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                <path fill="#ff0000"
+                                    d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24l0 112c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-112c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" />
+                            </svg>
+                        </div>
+                        <div id="toast-success">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="14" width="14"
+                                viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                <path fill="#63E6BE"
+                                    d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <strong id="toast-title" class="mx-2"></strong>
+                </div>
+                <div id="toast-body" class="m-2">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script src="dist/influx.min.js"></script>
+    <script>
+        let inputData = "";
+        let replaceSize = 1;
+        let selectedValue = "text";
+        let infoStatus = true;
+
+        function showInfo() {
+            const input = document.getElementById('input-div');
+            const info = document.getElementById('info-div');
+
+            if (infoStatus === false) {
+                input.style.display = "none";
+                info.style.display = "block";
+            } else {
+                input.style.display = "block";
+                info.style.display = "none";
+            }
+            infoStatus = !infoStatus;
+        }
+        showInfo();
+
+        function insertInput() {
+            const textarea = document.getElementById('input');
+            const replace = document.getElementById('replace-0');
+            const by = document.getElementById('by-0');
+
+            if (selectedValue === 'text') {
+                textarea.value = "A quick brown {{ animal }} jumps over the lazy dog."
+
+                replace.value = "{{ animal }}"
+                by.value = "fox"
+            } else {
+                textarea.value = beautifyJSON({
+                    "type": "api",
+                    "method": "POST",
+                    "action": "https://www.example.com/:id",
+                    "headers": {
+                        "content-type": "application/json"
+                    },
+                    "body": "{\"name\":\"(( NAME ))\"}",
+                    "queryParams": "{\"type\":\"merchant\"}",
+                    "pathParams": "{\"id\":\"(( ID ))\"}"
+                })
+                replace.value = "(( NAME ))"
+                by.value = "FOX"
+            }
+        }
+
+        function hideCallButton() {
+            const button = document.getElementById('callButton');
+
+            if (selectedValue === "text") {
+                button.style.display = 'none'; // Hides the button
+            } else {
+                button.style.display = 'block'; // Shows the button
+            }
+        }
+        hideCallButton();
+        insertInput();
+
+        document.getElementById('type').addEventListener('change', function (event) {
+            selectedValue = event.target.value;
+            // You can add additional logic here based on the selected value
+
+            hideCallButton();
+            insertInput();
+        });
+
+        document.getElementById('addRowBtn').addEventListener('click', function () {
+            // Create a new row div
+            const newRow = document.createElement('div');
+            newRow.className = 'row chat-content py-2 my-2';
+
+            // Create the first input section
+            const replaceDiv = document.createElement('div');
+            const replaceLabel = document.createElement('label');
+            replaceLabel.setAttribute('for', 'replace');
+            replaceLabel.textContent = 'Replace';
+            const replaceInput = document.createElement('input');
+            replaceInput.className = 'w-100';
+            replaceInput.id = `replace-${replaceSize}`;
+            replaceDiv.appendChild(replaceLabel);
+            replaceDiv.appendChild(replaceInput);
+
+            // Create the second input section
+            const byDiv = document.createElement('div');
+            const byLabel = document.createElement('label');
+            byLabel.setAttribute('for', 'by');
+            byLabel.textContent = 'By';
+            const byInput = document.createElement('input');
+            byInput.className = 'w-100';
+            byInput.id = `by-${replaceSize}`;
+            byDiv.appendChild(byLabel);
+            byDiv.appendChild(byInput);
+
+            // Append the input sections to the new row
+            newRow.appendChild(replaceDiv);
+            newRow.appendChild(byDiv);
+
+            // Append the new row to the container
+            document.getElementById('container').appendChild(newRow);
+            replaceSize += 1;
+        });
+
+        function beautifyJSON(jsonObject) {
+            // Format the JSON with 2 spaces indentation
+            return JSON.stringify(jsonObject, null, 2);
+        }
+
+        function getInputData() {
+            const textarea = document.getElementById('input');
+            inputData = textarea.value;
+        }
+
+        function getReplaceOptions() {
+            let obj = {}
+            for (let i = 0; i < replaceSize; i += 1) {
+                const to = document.getElementById(`replace-${i}`);
+                toReplace = to.value;
+
+                const by = document.getElementById(`by-${i}`);
+                replaceBy = by.value;
+
+                obj[toReplace] = replaceBy;
+            }
+            return obj;
+        }
+
+        function outputData() {
+            getInputData();
+            const obj = getReplaceOptions();
+
+            const outputTextArea = document.getElementById('output');
+            if (selectedValue === "text")
+                outputTextArea.value = influx.parseText(inputData, obj);
+            else if (selectedValue === "json") {
+                const parseJSON = influx.parseJSON(influx.parseJSON(JSON.parse(inputData), obj));
+                const beautify = beautifyJSON(parseJSON);
+                outputTextArea.value = beautify;
+            }
+        }
+
+        async function call() {
+            getInputData();
+            const obj = getReplaceOptions();
+
+            const outputTextArea = document.getElementById('output');
+
+            try {
+                const parsedInputData = JSON.parse(inputData);
+                if (parsedInputData.type === "api") {
+                    let request = await influx.parseJSON.call(parsedInputData, obj);
+
+                    const data = await request.json();
+                    triggerToast("Success", null);
+                    outputTextArea.value = beautifyJSON(data);
+                } else {
+                    const form = influx.parseJSON.call(parsedInputData, obj);
+                    form.submit();
+                }
+            } catch (err) {
+                triggerToast("Failed", err);
+            }
+
+        }
+
+        function triggerToast(status, obj) {
+            const toastLiveExample = document.getElementById('liveToast')
+
+            const success = document.getElementById('toast-success');
+            const failed = document.getElementById('toast-failed');
+            if (status === "Success") {
+                failed.style.display = "none";
+                success.style.display = "block";
+            } else {
+                failed.style.display = "block";
+                success.style.display = "none";
+            }
+
+            document.getElementById('toast-title').textContent = status;
+
+            if (obj?.message)
+                document.getElementById('toast-body').textContent = obj.message;
+            else
+                document.getElementById('toast-body').textContent = ""
+
+
+            const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+            toastBootstrap.show()
+        }
+    </script>
+</body>
+
+</html>
