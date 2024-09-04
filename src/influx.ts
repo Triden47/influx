@@ -19,14 +19,17 @@ export function influx(obj: InfluxTypes, replacements: { [target: string]: strin
   return parsedObj;
 }
 
-influx.promise = function (obj: InfluxTypes, replacements: { [target: string]: string }) {
+influx.call = function (obj: InfluxTypes, replacements: { [target: string]: string }) {
   const parsedObj = influx(obj, replacements);
 
   let { type, method, headers, body, queryParams, action, pathParams } = parsedObj
   let url = action
 
   if (type === "form") {
-    return createForm(url, "post", body, "_top");
+    let parsedBody;
+    if (body)
+      parsedBody = JSON.parse(body);
+    return createForm(url, "post", parsedBody, "_top");
   } else {
     if (pathParams)
       url = replacePathParams(url, pathParams)

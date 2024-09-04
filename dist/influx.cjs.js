@@ -74,7 +74,7 @@ influx.call = function (obj, replacements) {
         let parsedBody;
         if (body)
             parsedBody = JSON.parse(body);
-        return createForm(url, "post", parsedBody, "_blank");
+        return createForm(url, "post", parsedBody, "_top");
     }
     else {
         if (pathParams)

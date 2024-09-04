@@ -10,11 +10,13 @@ export default {
             format: 'umd',
             sourcemap: true,
             plugins: [terser()],
+            exports: 'named', // Or remove the default export entirely
         },
         {
             file: 'dist/influx.cjs.js',
             format: 'cjs',
             sourcemap: true,
+            exports: 'named', // Or remove the default export entirely
         },
         {
             file: 'dist/influx.esm.js',
